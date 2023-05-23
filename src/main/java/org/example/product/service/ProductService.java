@@ -17,15 +17,11 @@ public class ProductService {
     }
 
     public Product getProductById(int id) {
-        Product product = new Product();
         EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
+        Product product = new Product();
 
         try {
-            transaction.begin();
-
             product = entityManager.find(Product.class, id);
-            transaction.commit();
             return product;
         } catch (Exception e) {
             throw e;
@@ -37,14 +33,9 @@ public class ProductService {
 
     public List<Product> getProducts() {
         EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-
         try {
-            transaction.begin();
-
             Query query = entityManager.createNativeQuery("SELECT * FROM PRODUCT", Product.class);
             List<Product> products = query.getResultList();
-            transaction.commit();
             return products;
         } catch (Exception e) {
             throw e;
@@ -72,22 +63,16 @@ public class ProductService {
     }
 
     public int getMaxId() {
+        EntityManager entityManager = getEntityManager();
         String sql = "SELECT MAX(P_ID) FROM PRODUCT";
 
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-
         try {
-            transaction.begin();
-
             Query query = entityManager.createNativeQuery(sql);
             Object max = query.getSingleResult();
-            transaction.commit();
 
             if (max == null) {
                 return 1;
             }
-
             return Integer.parseInt(max.toString()) + 1;
         } catch (Exception e) {
             throw e;
@@ -98,13 +83,14 @@ public class ProductService {
     }
 
     public boolean delete(int id) {
-        Product product = getProductById(id);
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        // Não busca pela função já
+        Product product = entityManager.find(Product.class, id);
         if (product == null) {
             return false;
         }
-
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();

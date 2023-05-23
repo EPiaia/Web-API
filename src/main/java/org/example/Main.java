@@ -38,11 +38,6 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        ProductService ps = new ProductService();
-        int max = ps.getMaxId();
-        System.out.println("MAX = " + max);
-
-
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with endpoints available at "
                 + "%s%nHit Ctrl-C to stop it...", BASE_URI));

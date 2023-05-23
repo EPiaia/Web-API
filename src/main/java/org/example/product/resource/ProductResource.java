@@ -9,37 +9,31 @@ import org.example.product.service.ProductService;
 
 import java.util.List;
 
-@Path("/v1/resource")
+@Path("/v1/product")
 public class ProductResource {
 
     private ProductService productService = new ProductService();
 
     @GET
-    @Path("/productId")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getProductById(Product product) {
-        if (product == null || product.getpId() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+    public Response getProductById(@PathParam("id") int pId) {
+        Product returnProduct = productService.getProductById(pId);
+        if (returnProduct == null) {
+            return Response.status(400, "Product not found.").build();
         }
-
-        int id = product.getpId();
-        Product returnProduct = productService.getProductById(id);
         Gson gson = new Gson();
         return Response.ok(gson.toJson(returnProduct)).build();
     }
 
     @GET
-    @Path("/products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts() {
         List<Product> products = productService.getProducts();
-        Gson gson = new Gson();
-        return Response.ok(gson.toJson(products)).build();
+        return Response.ok(products).build();
     }
 
     @POST
-    @Path("/newProduct")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createProduct(Product product) {
@@ -49,12 +43,10 @@ public class ProductResource {
         int maxId = productService.getMaxId();
         product.setpId(maxId);
         Product returnProduct = productService.save(product);
-        Gson gson = new Gson();
-        return Response.ok(gson.toJson(returnProduct)).build();
+        return Response.ok(returnProduct).build();
     }
 
     @PUT
-    @Path("/updateProduct")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProduct(Product product) {
@@ -62,19 +54,15 @@ public class ProductResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         Product returnProduct = productService.save(product);
-        Gson gson = new Gson();
-        return Response.ok(gson.toJson(returnProduct)).build();
+        return Response.ok(returnProduct).build();
     }
 
     @DELETE
-    @Path("/deleteProduct")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteProduct(Product product) {
-        if (product == null || product.getpId() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        boolean status = productService.delete(product.getpId());
+    public Response deleteProduct(@PathParam("id") int pId) {
+        boolean status = productService.delete(pId);
         if (status) {
             return Response.ok("Product deleted.").build();
         } else {
