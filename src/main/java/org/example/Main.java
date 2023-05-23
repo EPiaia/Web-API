@@ -8,6 +8,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 /**
  * Main class.
@@ -38,10 +39,8 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         ProductService ps = new ProductService();
-        Product p = ps.getProductById(1);
-        if (p != null) {
-            System.out.println("Produto com código 1 encontrado! Descrição: " + p.getpDesc());
-        }
+        int max = ps.getMaxId();
+        System.out.println("MAX = " + max);
 
 
         final HttpServer server = startServer();
