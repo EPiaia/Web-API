@@ -1,0 +1,142 @@
+---
+openapi: 3.0.0
+info:
+  title: Prog Web API
+  description: Prog Web API
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /product:
+    get:
+      summary: Pesquisa todos os produtos
+      description: |
+        Permite pesquisar todos os produtos cadastrados no sistema
+      responses:
+        "200":
+          description: retorna os produtos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetail'
+    put:
+      summary: Atualiza um produto existente
+      description: Atualiza um produto existente do sistema
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDetail'
+      responses:
+        "200":
+          description: Produto Atualizado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetail'
+        "400":
+          description: Parâmetros inválidos
+    post:
+      summary: Adiciona um novo produto
+      description: Adiciona um novo produto ao sistema
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProductDetail'
+      responses:
+        "200":
+          description: Produto Criado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetail'
+        "400":
+          description: Parâmetros inválidos
+  /product/{id}:
+    get:
+      summary: Pesquisa o produto de acordo com o id informado
+      description: |
+        Permite pesquisar o produto com o id informado
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: retorna os dados do produto encontrado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetail'
+        "400":
+          description: produto não encontrado
+    delete:
+      summary: Deleta o produto de acordo com o id informado
+      description: |
+        Permite deletar o produto com o id informado
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: retorna uma confirmação de que o produto foi deletado
+        "500":
+          description: produto não deletado
+components:
+  schemas:
+    ProductDetail:
+      required:
+      - pDesc
+      - pId
+      - pMarca
+      - pValorUn
+      type: object
+      properties:
+        pId:
+          type: integer
+          example: 1
+        pDesc:
+          type: string
+          example: Produto Teste
+        pMarca:
+          type: string
+          example: Nome da Marca
+        pValorUn:
+          type: number
+          example: 7.2
+    NewProductDetail:
+      required:
+      - pDesc
+      - pMarca
+      - pValorUn
+      type: object
+      properties:
+        pDesc:
+          type: string
+          example: Produto Teste
+        pMarca:
+          type: string
+          example: Nome da Marca
+        pValorUn:
+          type: number
+          example: 7.2
