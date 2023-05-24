@@ -1,6 +1,5 @@
 package org.example.product.resource;
 
-import com.google.gson.Gson;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -22,8 +21,7 @@ public class ProductResource {
         if (returnProduct == null) {
             return Response.status(400, "Product not found.").build();
         }
-        Gson gson = new Gson();
-        return Response.ok(gson.toJson(returnProduct)).build();
+        return Response.ok(returnProduct).build();
     }
 
     @GET
